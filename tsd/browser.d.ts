@@ -1,0 +1,1 @@
+/// <reference path="react-hot-loader.d.ts" />

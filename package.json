@@ -1,0 +1,45 @@
+{
+  "name": "webpack-ts-seed",
+  "version": "0.0.1",
+  "description": "webpack-ts-seed",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/michalkowol/webpack-ts-seed.git"
+  },
+  "license": "ISC",
+  "scripts": {
+    "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
+    "start:dev": "node server.js",
+    "start:prod": "NODE_ENV=production webpack && node server.js",
+    "build": "NODE_ENV=production webpack",
+    "typings": "typings",
+    "postinstall": "typings install"
+  },
+  "dependencies": {
+    "bootstrap": "3.3.x",
+    "immutable": "3.8.x",
+    "jquery": "2.2.x",
+    "lodash": "4.11.x",
+    "react": "15.0.x",
+    "react-dom": "15.0.x",
+    "react-redux": "4.4.x",
+    "react-router": "2.3.x",
+    "react-router-redux": "4.0.x",
+    "redux": "3.5.x"
+  },
+  "devDependencies": {
+    "css-loader": "0.23.x",
+    "file-loader": "0.8.x",
+    "if-env": "1.0.x",
+    "node-sass": "3.5.x",
+    "react-hot-loader": "^3.0.0-alpha.9",
+    "redux-devtools": "3.2.x",
+    "sass-loader": "3.2.x",
+    "style-loader": "0.13.x",
+    "ts-loader": "0.8.x",
+    "typescript": "1.8.x",
+    "typings": "0.8.x",
+    "webpack": "1.13.x",
+    "webpack-dev-server": "1.14.x"
+  }
+}
