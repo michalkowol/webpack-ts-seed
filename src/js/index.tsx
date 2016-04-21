@@ -5,7 +5,7 @@ import App from 'js/component/App'
 
 require('file?name=[name].[ext]!index.html');
 require('file?name=[name].[ext]!bootstrap/dist/css/bootstrap.min.css');
-require('js/myredux');
+require('js/counter/CounterApp');
 require('css/main.scss');
 
 const rootEl = document.getElementById('app');
