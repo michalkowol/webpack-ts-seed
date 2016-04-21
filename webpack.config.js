@@ -42,7 +42,7 @@ module.exports = {
       loaders: ['style', 'css?sourceMap', 'sass?sourceMap']
     },
     {
-      test: /\.png$/,
+      test: /\.(jpe?g|png|gif|svg)$/i,
       exclude: /node_modules/,
       loaders: ['file?name=[path][name].[ext]']
     }]

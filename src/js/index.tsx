@@ -4,6 +4,7 @@ import * as ReactDOM from 'react-dom'
 import App from 'js/component/App'
 
 require('file?name=[name].[ext]!index.html');
+require('file?name=[name].[ext]!bootstrap/dist/css/bootstrap.min.css');
 require('js/myredux');
 require('css/main.scss');
 
