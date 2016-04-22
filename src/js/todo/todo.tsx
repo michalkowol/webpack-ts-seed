@@ -72,7 +72,7 @@ const rootReducer = combineReducers({
 });
 const store = createStore(rootReducer);
 
-const FilterLink: React.SFC<{filter: string, currentFilter: string, onClick: (filter: string) => void, children?: React.ReactNode}> = ({filter, currentFilter, onClick, children}) => {
+const FilterLink = ({filter, currentFilter, onClick, children} : {filter: string, currentFilter: string, onClick: (filter: string) => void, children?: React.ReactNode}) => {
   if (filter === currentFilter) {
     return (<span>{children}</span>);
   }
@@ -97,7 +97,7 @@ const getVisibleTodos = (todos: List<Todo>, filter: string): List<Todo> => {
   }
 };
 
-const AddTodo: React.SFC<{onAddButtonClick: (text: string) => void}> = ({onAddButtonClick}) => {
+const AddTodo = ({onAddButtonClick} : {onAddButtonClick: (text: string) => void}) => {
   let input: HTMLInputElement;
   const onAddButtonClickWithClean = (e) => {
     e.preventDefault();
@@ -116,13 +116,13 @@ const AddTodo: React.SFC<{onAddButtonClick: (text: string) => void}> = ({onAddBu
   );
 };
 
-const Todo: React.SFC<{onClick: React.MouseEventHandler, completed: boolean, children?: React.ReactNode}> = ({onClick, completed, children}) => (
+const Todo = ({onClick, completed, children} : {onClick: React.MouseEventHandler, completed: boolean, children?: React.ReactNode}) => (
     <li style={{textDecoration: completed ? 'line-through' : 'none'}} onClick={onClick}>
       {children}
     </li>
 );
 
-const TodoList: React.SFC<{onTodoClick: (id: number) => void, todos: List<Todo>}> = ({onTodoClick, todos}) => (
+const TodoList = ({onTodoClick, todos} : {onTodoClick: (id: number) => void, todos: List<Todo>}) => (
   <ul>
     {todos.map(todo => (
       <Todo key={todo.id} onClick={() => onTodoClick(todo.id)} completed={todo.completed}>{todo.text}</Todo>
@@ -130,7 +130,7 @@ const TodoList: React.SFC<{onTodoClick: (id: number) => void, todos: List<Todo>}
   </ul>
 );
 
-const Filters: React.SFC<{currentFilter: string, onFilterClick: (filter: string) => void}> = ({currentFilter, onFilterClick}) => (
+const Filters = ({currentFilter, onFilterClick} : {currentFilter: string, onFilterClick: (filter: string) => void}) => (
   <div>
     {'Filters: '}
     <FilterLink filter='SHOW_ALL' currentFilter={currentFilter} onClick={onFilterClick}>All</FilterLink>{' '}
@@ -140,7 +140,7 @@ const Filters: React.SFC<{currentFilter: string, onFilterClick: (filter: string)
 );
 
 var nextTodoId = 0;
-const TodoApp: React.SFC<{todos: List<Todo>, visibilityFilter: string}> = ({todos, visibilityFilter}) => {
+const TodoApp = ({todos, visibilityFilter} : {todos: List<Todo>, visibilityFilter: string}) => {
   const addTodo = (text: string) => {
     const action: AddTodoAction = {
       type: 'ADD_TODO',
