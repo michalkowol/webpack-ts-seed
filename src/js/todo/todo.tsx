@@ -4,6 +4,12 @@ import {List} from 'immutable'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 
+interface Todo {
+  id: number,
+  text: string,
+  completed: boolean
+}
+
 interface Action {
   type: string
 }
@@ -15,12 +21,6 @@ interface AddTodoAction extends Action {
 
 interface ToggleTodoAction extends Action {
   id: number,
-}
-
-interface Todo {
-  id: number,
-  text: string,
-  completed: boolean
 }
 
 interface FilterAction extends Action {
@@ -130,7 +130,7 @@ const TodoList: React.SFC<{onTodoClick: (id: number) => void, todos: List<Todo>}
   </ul>
 );
 
-const Filters : React.SFC<{currentFilter: string, onFilterClick: (filter: string) => void}> = ({currentFilter, onFilterClick}) => (
+const Filters: React.SFC<{currentFilter: string, onFilterClick: (filter: string) => void}> = ({currentFilter, onFilterClick}) => (
   <div>
     {'Filters: '}
     <FilterLink filter='SHOW_ALL' currentFilter={currentFilter} onClick={onFilterClick}>All</FilterLink>{' '}
@@ -140,9 +140,8 @@ const Filters : React.SFC<{currentFilter: string, onFilterClick: (filter: string
 );
 
 var nextTodoId = 0;
-class TodoApp extends React.Component<{todos: List<Todo>, visibilityFilter: string}, {}> {
-
-  addTodo = (text: string) => {
+const TodoApp: React.SFC<{todos: List<Todo>, visibilityFilter: string}> = ({todos, visibilityFilter}) => {
+  const addTodo = (text: string) => {
     const action: AddTodoAction = {
       type: 'ADD_TODO',
       id: nextTodoId++,
@@ -151,7 +150,7 @@ class TodoApp extends React.Component<{todos: List<Todo>, visibilityFilter: stri
     store.dispatch(action);
   };
 
-  toggleTodo = (id: number) => {
+  const toggleTodo = (id: number) => {
     const action: ToggleTodoAction = {
       type: 'TOGGLE_TODO',
       id
@@ -159,7 +158,7 @@ class TodoApp extends React.Component<{todos: List<Todo>, visibilityFilter: stri
     store.dispatch(action);
   };
 
-  onFilterClick = (filter: string) => {
+  const onFilterClick = (filter: string) => {
     const action: FilterAction = {
       type: 'SET_VISIBILITY_FILTER',
       filter
@@ -167,19 +166,17 @@ class TodoApp extends React.Component<{todos: List<Todo>, visibilityFilter: stri
     store.dispatch(action);
   };
 
-  render() {
-    const visibilityFilter = this.props.visibilityFilter;
-    const visibleTodos = getVisibleTodos(this.props.todos, this.props.visibilityFilter);
-    return (
-      <div>
-        <h1>Todo:</h1>
-        <AddTodo onAddButtonClick={this.addTodo} />
-        <TodoList todos={visibleTodos} onTodoClick={this.toggleTodo} />
-        <Filters currentFilter={visibilityFilter} onFilterClick={this.onFilterClick} />
-      </div>
-    );
-  }
-}
+  const visibleTodos = getVisibleTodos(todos, visibilityFilter);
+
+  return (
+    <div>
+      <h1>Todo:</h1>
+      <AddTodo onAddButtonClick={addTodo} />
+      <TodoList todos={visibleTodos} onTodoClick={toggleTodo} />
+      <Filters currentFilter={visibilityFilter} onFilterClick={onFilterClick} />
+    </div>
+  );
+};
 
 const render = () => {
   console.log(store.getState());
