@@ -134,6 +134,15 @@ const TodoList: React.SFC<{onTodoClick: (id: number) => void, todos: List<Todo>}
   </ul>
 );
 
+const Filters : React.SFC<{currentFilter: string}> = ({currentFilter}) => (
+  <div>
+    {'Filters: '}
+    <FilterLink filter='SHOW_ALL' currentFilter={currentFilter}>All</FilterLink>{' '}
+    <FilterLink filter='SHOW_ACTIVE' currentFilter={currentFilter}>Active</FilterLink>{' '}
+    <FilterLink filter='SHOW_COMPLETED' currentFilter={currentFilter}>Completed</FilterLink>
+  </div>
+);
+
 var nextTodoId = 0;
 class TodoApp extends React.Component<{todos: List<Todo>, visibilityFilter: string}, {}> {
 
@@ -162,10 +171,7 @@ class TodoApp extends React.Component<{todos: List<Todo>, visibilityFilter: stri
         <h1>Todo:</h1>
         <AddTodo onAddButtonClick={this.addTodo} />
         <TodoList todos={visibleTodos} onTodoClick={this.toggleTodo} />
-        {'Filters: '}
-        <FilterLink filter='SHOW_ALL' currentFilter={visibilityFilter}>All</FilterLink>{' '}
-        <FilterLink filter='SHOW_ACTIVE' currentFilter={visibilityFilter}>Active</FilterLink>{' '}
-        <FilterLink filter='SHOW_COMPLETED' currentFilter={visibilityFilter}>Completed</FilterLink>
+        <Filters currentFilter={visibilityFilter} />
       </div>
     );
   }
