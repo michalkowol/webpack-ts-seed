@@ -6,6 +6,7 @@ import App from 'js/component/App'
 require('file?name=[name].[ext]!index.html');
 require('file?name=[name].[ext]!bootstrap/dist/css/bootstrap.min.css');
 require('js/counter/CounterApp');
+require('js/todo/todo');
 require('css/main.scss');
 
 const rootEl = document.getElementById('app');

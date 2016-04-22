@@ -1,10 +1,10 @@
 import * as React from 'react'
 
-interface CounterState {
+interface TimerState {
   counter: number
 }
 
-export default class Counter extends React.Component<{}, CounterState> {
+export default class Timer extends React.Component<{}, TimerState> {
   
   interval: any;
 
@@ -18,7 +18,6 @@ export default class Counter extends React.Component<{}, CounterState> {
   }
 
   tick() {
-    console.log(this.state);
     this.setState({
       counter: this.state.counter + 1
     });
@@ -30,7 +29,7 @@ export default class Counter extends React.Component<{}, CounterState> {
 
   render() {
     return (
-      <h2>Counter: {this.state.counter}</h2>
+      <h2>Timer: {this.state.counter}</h2>
    );
   }
 }

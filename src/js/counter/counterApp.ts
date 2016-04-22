@@ -18,12 +18,11 @@ function configureStore(reducer, initialState) {
 let store = configureStore(counter, undefined);
 
 function render() {
-  document.getElementById('redux').innerHTML = `<h2>${store.getState()}</h2>`;
+  document.getElementById('redux').innerHTML = `<h2>Click counter: ${store.getState()}</h2>`;
 }
 
 // You can subscribe to the updates manually, or use bindings to your view layer.
 store.subscribe(() => {
-  console.log(store.getState());
   render();
 });
 render();

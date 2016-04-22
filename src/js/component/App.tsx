@@ -1,11 +1,11 @@
 import * as React from 'react'
 import Layout from 'js/component/Layout'
-import Counter from 'js/component/Counter'
+import Timer from 'js/component/Timer'
 
 const App: React.StatelessComponent<{}> = () => {
   return (
     <Layout>
-      <Counter />
+      <Timer />
     </Layout>
   )
 };
