@@ -106,7 +106,8 @@ class TodoApp extends React.Component<{todos: List<Todo>, visibilityFilter: stri
 
   input: HTMLInputElement;
 
-  addTodo = () => {
+  addTodo = (e) => {
+    e.preventDefault();
     const action: AddTodoAction = {
       type: 'ADD_TODO',
       id: nextTodoId++,
@@ -130,12 +131,14 @@ class TodoApp extends React.Component<{todos: List<Todo>, visibilityFilter: stri
     return (
       <div>
         <h1>Todo:</h1>
-        <div className='input-group'>
-          <input type='email' className='form-control' placeholder='Todo...' ref={node => this.input = node} />
-          <span className='input-group-btn'>
-            <button type='button' className='btn btn-default' onClick={this.addTodo}>Add</button>
-          </span>
-        </div>
+        <form className='form-inline'>
+          <div className='input-group'>
+            <input type='email' className='form-control' placeholder='Todo...' ref={node => this.input = node} />
+            <span className='input-group-btn'>
+              <button type='submit' className='btn btn-default' onClick={this.addTodo}>Add</button>
+            </span>
+          </div>
+        </form>
         <ul>
           {visibleTodos.map(todo => {
             const todoStyle = todo.completed ? 'line-through' : 'none';
