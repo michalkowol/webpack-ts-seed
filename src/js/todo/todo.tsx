@@ -101,6 +101,25 @@ const getVisibleTodos = (todos: List<Todo>, filter: string): List<Todo> => {
   }
 };
 
+const AddTodo: React.SFC<{onAddButtonClick: (text: string) => void}> = ({onAddButtonClick}) => {
+  let input: HTMLInputElement;
+  const onAddButtonClickWithClean = (e) => {
+    e.preventDefault();
+    onAddButtonClick(input.value);
+    input.value = ""
+  };
+  return (
+    <form className='form-inline'>
+      <div className='input-group'>
+        <input type='email' className='form-control' placeholder='Todo...' ref={node => input = node} />
+        <span className='input-group-btn'>
+          <button type='submit' className='btn btn-default' onClick={onAddButtonClickWithClean}>Add</button>
+        </span>
+      </div>
+    </form>
+  );
+};
+
 const Todo: React.SFC<{onClick: React.MouseEventHandler, completed: boolean, children?: React.ReactNode}> = ({onClick, completed, children}) => (
     <li style={{textDecoration: completed ? 'line-through' : 'none'}} onClick={onClick}>
       {children}
@@ -118,17 +137,13 @@ const TodoList: React.SFC<{onTodoClick: (id: number) => void, todos: List<Todo>}
 var nextTodoId = 0;
 class TodoApp extends React.Component<{todos: List<Todo>, visibilityFilter: string}, {}> {
 
-  input: HTMLInputElement;
-
-  addTodo = (e) => {
-    e.preventDefault();
+  addTodo = (text: string) => {
     const action: AddTodoAction = {
       type: 'ADD_TODO',
       id: nextTodoId++,
-      text: this.input.value
+      text
     };
     store.dispatch(action);
-    this.input.value = ""
   };
 
   toggleTodo = (id: number) => {
@@ -145,14 +160,7 @@ class TodoApp extends React.Component<{todos: List<Todo>, visibilityFilter: stri
     return (
       <div>
         <h1>Todo:</h1>
-        <form className='form-inline'>
-          <div className='input-group'>
-            <input type='email' className='form-control' placeholder='Todo...' ref={node => this.input = node} />
-            <span className='input-group-btn'>
-              <button type='submit' className='btn btn-default' onClick={this.addTodo}>Add</button>
-            </span>
-          </div>
-        </form>
+        <AddTodo onAddButtonClick={this.addTodo} />
         <TodoList todos={visibleTodos} onTodoClick={this.toggleTodo} />
         {'Filters: '}
         <FilterLink filter='SHOW_ALL' currentFilter={visibilityFilter}>All</FilterLink>{' '}
