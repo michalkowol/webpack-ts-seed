@@ -81,7 +81,7 @@ const FilterLink: React.SFC<{filter: string, currentFilter: string, children?: R
       e.preventDefault();
       const action: FilterAction = {
         type: 'SET_VISIBILITY_FILTER',
-        filter: filter
+        filter
       };
       store.dispatch(action);
     }}>
@@ -134,7 +134,7 @@ class TodoApp extends React.Component<{todos: List<Todo>, visibilityFilter: stri
   toggleTodo = (id: number) => {
     const action: ToggleTodoAction = {
       type: 'TOGGLE_TODO',
-      id: id
+      id
     };
     store.dispatch(action);
   };
