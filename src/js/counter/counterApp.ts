@@ -3,7 +3,8 @@ import counter from 'js/counter/counter'
 
 function configureStore(reducer, initialState) {
   const store = createStore(reducer, initialState,
-    (window as any).devToolsExtension ? (window as any).devToolsExtension() : undefined
+    // (window as any).devToolsExtension ? (window as any).devToolsExtension() : undefined
+    undefined
   );
   if (module.hot) {
     module.hot.accept('js/counter/counter', () =>
