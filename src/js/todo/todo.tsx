@@ -72,7 +72,7 @@ const rootReducer = combineReducers({
 });
 const store = createStore(rootReducer);
 
-const FilterLink: React.StatelessComponent<{filter: string, currentFilter: string, children?: React.ReactNode}> = ({filter, currentFilter, children}) => {
+const FilterLink: React.SFC<{filter: string, currentFilter: string, children?: React.ReactNode}> = ({filter, currentFilter, children}) => {
   if (filter === currentFilter) {
     return (<span>{children}</span>);
   }
@@ -100,6 +100,20 @@ const getVisibleTodos = (todos: List<Todo>, filter: string): List<Todo> => {
       return todos.filter(t => t.completed).toList();
   }
 };
+
+const Todo: React.SFC<{onClick: React.MouseEventHandler, completed: boolean, children?: React.ReactNode}> = ({onClick, completed, children}) => (
+    <li style={{textDecoration: completed ? 'line-through' : 'none'}} onClick={onClick}>
+      {children}
+    </li>
+);
+
+const TodoList: React.SFC<{onTodoClick: (id: number) => void, todos: List<Todo>}> = ({onTodoClick, todos}) => (
+  <ul>
+    {todos.map(todo => (
+      <Todo key={todo.id} onClick={() => onTodoClick(todo.id)} completed={todo.completed}>{todo.text}</Todo>
+    ))}
+  </ul>
+);
 
 var nextTodoId = 0;
 class TodoApp extends React.Component<{todos: List<Todo>, visibilityFilter: string}, {}> {
@@ -139,12 +153,7 @@ class TodoApp extends React.Component<{todos: List<Todo>, visibilityFilter: stri
             </span>
           </div>
         </form>
-        <ul>
-          {visibleTodos.map(todo => {
-            const todoStyle = todo.completed ? 'line-through' : 'none';
-            return <li key={todo.id} style={{textDecoration: todoStyle}} onClick={() => this.toggleTodo(todo.id)}>{todo.text}</li>
-          })}
-        </ul>
+        <TodoList todos={visibleTodos} onTodoClick={this.toggleTodo} />
         {'Filters: '}
         <FilterLink filter='SHOW_ALL' currentFilter={visibilityFilter}>All</FilterLink>{' '}
         <FilterLink filter='SHOW_ACTIVE' currentFilter={visibilityFilter}>Active</FilterLink>{' '}
