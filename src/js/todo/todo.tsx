@@ -72,18 +72,14 @@ const rootReducer = combineReducers({
 });
 const store = createStore(rootReducer);
 
-const FilterLink: React.SFC<{filter: string, currentFilter: string, children?: React.ReactNode}> = ({filter, currentFilter, children}) => {
+const FilterLink: React.SFC<{filter: string, currentFilter: string, onClick: (filter: string) => void, children?: React.ReactNode}> = ({filter, currentFilter, onClick, children}) => {
   if (filter === currentFilter) {
     return (<span>{children}</span>);
   }
   return (
-    <a href="#" onClick={ e => {
+    <a href='#' onClick={ e => {
       e.preventDefault();
-      const action: FilterAction = {
-        type: 'SET_VISIBILITY_FILTER',
-        filter
-      };
-      store.dispatch(action);
+      onClick(filter);
     }}>
       {children}
     </a>
@@ -106,7 +102,7 @@ const AddTodo: React.SFC<{onAddButtonClick: (text: string) => void}> = ({onAddBu
   const onAddButtonClickWithClean = (e) => {
     e.preventDefault();
     onAddButtonClick(input.value);
-    input.value = ""
+    input.value = ''
   };
   return (
     <form className='form-inline'>
@@ -134,12 +130,12 @@ const TodoList: React.SFC<{onTodoClick: (id: number) => void, todos: List<Todo>}
   </ul>
 );
 
-const Filters : React.SFC<{currentFilter: string}> = ({currentFilter}) => (
+const Filters : React.SFC<{currentFilter: string, onFilterClick: (filter: string) => void}> = ({currentFilter, onFilterClick}) => (
   <div>
     {'Filters: '}
-    <FilterLink filter='SHOW_ALL' currentFilter={currentFilter}>All</FilterLink>{' '}
-    <FilterLink filter='SHOW_ACTIVE' currentFilter={currentFilter}>Active</FilterLink>{' '}
-    <FilterLink filter='SHOW_COMPLETED' currentFilter={currentFilter}>Completed</FilterLink>
+    <FilterLink filter='SHOW_ALL' currentFilter={currentFilter} onClick={onFilterClick}>All</FilterLink>{' '}
+    <FilterLink filter='SHOW_ACTIVE' currentFilter={currentFilter} onClick={onFilterClick}>Active</FilterLink>{' '}
+    <FilterLink filter='SHOW_COMPLETED' currentFilter={currentFilter} onClick={onFilterClick}>Completed</FilterLink>
   </div>
 );
 
@@ -163,6 +159,14 @@ class TodoApp extends React.Component<{todos: List<Todo>, visibilityFilter: stri
     store.dispatch(action);
   };
 
+  onFilterClick = (filter: string) => {
+    const action: FilterAction = {
+      type: 'SET_VISIBILITY_FILTER',
+      filter
+    };
+    store.dispatch(action);
+  };
+
   render() {
     const visibilityFilter = this.props.visibilityFilter;
     const visibleTodos = getVisibleTodos(this.props.todos, this.props.visibilityFilter);
@@ -171,7 +175,7 @@ class TodoApp extends React.Component<{todos: List<Todo>, visibilityFilter: stri
         <h1>Todo:</h1>
         <AddTodo onAddButtonClick={this.addTodo} />
         <TodoList todos={visibleTodos} onTodoClick={this.toggleTodo} />
-        <Filters currentFilter={visibilityFilter} />
+        <Filters currentFilter={visibilityFilter} onFilterClick={this.onFilterClick} />
       </div>
     );
   }
