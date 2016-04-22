@@ -129,26 +129,40 @@ const getVisibleTodos = (todos: List<Todo>, filter: string): List<Todo> => {
   }
 };
 
-const AddTodo = ({onAddButtonClick} : {onAddButtonClick: (text: string) => void}) => {
+const InputWithButton = ({inputPlaceholder, buttonText, onButtonClick} : {inputPlaceholder: string, buttonText: string, onButtonClick: (event: React.MouseEvent, input: HTMLInputElement) => void}) => {
   let input: HTMLInputElement;
-  const onAddButtonClickWithClean = (e) => {
-    e.preventDefault();
-    onAddButtonClick(input.value);
-    input.value = ''
-  };
   return (
     <form className='form-inline'>
       <div className='input-group'>
-        <input type='email' className='form-control' placeholder='Todo...' ref={node => input = node} />
+        <input type='email' className='form-control' placeholder={inputPlaceholder} ref={node => input = node} />
         <span className='input-group-btn'>
-          <button type='submit' className='btn btn-default' onClick={onAddButtonClickWithClean}>Add</button>
+          <button type='submit' className='btn btn-default' onClick={(event) => onButtonClick(event, input)}>{buttonText}</button>
         </span>
       </div>
     </form>
   );
 };
 
-const Todo = ({onClick, completed, children} : {onClick: React.MouseEventHandler, completed: boolean, children?: React.ReactNode}) => (
+class AddTodo extends React.Component<{}, {}> {
+  onAddButtonClick = (event: React.MouseEvent, input: HTMLInputElement) => {
+    event.preventDefault();
+    const action: AddTodoAction = {
+      type: 'ADD_TODO',
+      id: nextTodoId++,
+      text: input.value
+    };
+    store.dispatch(action);
+    input.value = ''
+  };
+
+  render() {
+    return (
+      <InputWithButton inputPlaceholder='Todo...' buttonText='Add' onButtonClick={this.onAddButtonClick} />
+    );
+  }
+}
+
+const Todo = ({onClick, completed, children} : {onClick: () => void, completed: boolean, children?: React.ReactNode}) => (
     <li style={{textDecoration: completed ? 'line-through' : 'none'}} onClick={onClick}>
       {children}
     </li>
@@ -173,14 +187,7 @@ const Filters = () => (
 
 var nextTodoId = 0;
 const TodoApp = ({todos, visibilityFilter} : {todos: List<Todo>, visibilityFilter: string}) => {
-  const addTodo = (text: string) => {
-    const action: AddTodoAction = {
-      type: 'ADD_TODO',
-      id: nextTodoId++,
-      text
-    };
-    store.dispatch(action);
-  };
+
 
   const toggleTodo = (id: number) => {
     const action: ToggleTodoAction = {
@@ -195,7 +202,7 @@ const TodoApp = ({todos, visibilityFilter} : {todos: List<Todo>, visibilityFilte
   return (
     <div>
       <h1>Todo:</h1>
-      <AddTodo onAddButtonClick={addTodo} />
+      <AddTodo />
       <TodoList todos={visibleTodos} onTodoClick={toggleTodo} />
       <Filters />
     </div>
