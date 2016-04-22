@@ -45,7 +45,7 @@ const todo = (state: Todo, action: AddTodoAction | ToggleTodoAction): Todo => {
   }
 };
 
-const todos = (state: List<Todo> = (List.of() as List<Todo>), action: AddTodoAction | ToggleTodoAction): List<Todo> => {
+const todos = (state = Commons.emptyList<Todo>(), action: AddTodoAction | ToggleTodoAction): List<Todo> => {
   switch (action.type) {
     case 'ADD_TODO':
       const newTodo = todo(undefined, action);
@@ -57,7 +57,7 @@ const todos = (state: List<Todo> = (List.of() as List<Todo>), action: AddTodoAct
   }
 };
 
-const visibilityFilter = (state: string = 'SHOW_ALL', action: FilterAction): string => {
+const visibilityFilter = (state = 'SHOW_ALL', action: FilterAction): string => {
   switch (action.type) {
     case 'SET_VISIBILITY_FILTER':
       return action.filter;
@@ -72,19 +72,51 @@ const rootReducer = combineReducers({
 });
 const store = createStore(rootReducer);
 
-const FilterLink = ({filter, currentFilter, onClick, children} : {filter: string, currentFilter: string, onClick: (filter: string) => void, children?: React.ReactNode}) => {
-  if (filter === currentFilter) {
+const Link = ({active, onClick, children} : {active: boolean, onClick: () => void, children?: React.ReactNode}) => {
+  if (active) {
     return (<span>{children}</span>);
   }
   return (
     <a href='#' onClick={ e => {
       e.preventDefault();
-      onClick(filter);
+      onClick();
     }}>
       {children}
     </a>
   )
 };
+
+class FilterLink extends React.Component<{filter: string, children?: React.ReactNode}, {}> {
+
+  unsubscribe: Function;
+
+  componentDidMount() {
+    this.unsubscribe = store.subscribe(() =>
+      this.forceUpdate()
+    );
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  onFilterClick = () => {
+    const action: FilterAction = {
+      type: 'SET_VISIBILITY_FILTER',
+      filter: this.props.filter
+    };
+    store.dispatch(action);
+  };
+
+  render() {
+    const currentFilter = store.getState().visibilityFilter;
+    const filter = this.props.filter;
+    const children = this.props.children;
+    return (
+      <Link active={filter === currentFilter} onClick={this.onFilterClick}>{children}</Link>
+    );
+  }
+}
 
 const getVisibleTodos = (todos: List<Todo>, filter: string): List<Todo> => {
   switch (filter) {
@@ -130,12 +162,12 @@ const TodoList = ({onTodoClick, todos} : {onTodoClick: (id: number) => void, tod
   </ul>
 );
 
-const Filters = ({currentFilter, onFilterClick} : {currentFilter: string, onFilterClick: (filter: string) => void}) => (
+const Filters = () => (
   <div>
     {'Filters: '}
-    <FilterLink filter='SHOW_ALL' currentFilter={currentFilter} onClick={onFilterClick}>All</FilterLink>{' '}
-    <FilterLink filter='SHOW_ACTIVE' currentFilter={currentFilter} onClick={onFilterClick}>Active</FilterLink>{' '}
-    <FilterLink filter='SHOW_COMPLETED' currentFilter={currentFilter} onClick={onFilterClick}>Completed</FilterLink>
+    <FilterLink filter='SHOW_ALL'>All</FilterLink>{' '}
+    <FilterLink filter='SHOW_ACTIVE'>Active</FilterLink>{' '}
+    <FilterLink filter='SHOW_COMPLETED'>Completed</FilterLink>
   </div>
 );
 
@@ -158,14 +190,6 @@ const TodoApp = ({todos, visibilityFilter} : {todos: List<Todo>, visibilityFilte
     store.dispatch(action);
   };
 
-  const onFilterClick = (filter: string) => {
-    const action: FilterAction = {
-      type: 'SET_VISIBILITY_FILTER',
-      filter
-    };
-    store.dispatch(action);
-  };
-
   const visibleTodos = getVisibleTodos(todos, visibilityFilter);
 
   return (
@@ -173,7 +197,7 @@ const TodoApp = ({todos, visibilityFilter} : {todos: List<Todo>, visibilityFilte
       <h1>Todo:</h1>
       <AddTodo onAddButtonClick={addTodo} />
       <TodoList todos={visibleTodos} onTodoClick={toggleTodo} />
-      <Filters currentFilter={visibilityFilter} onFilterClick={onFilterClick} />
+      <Filters />
     </div>
   );
 };
