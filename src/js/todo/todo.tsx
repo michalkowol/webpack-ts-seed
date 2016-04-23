@@ -1,10 +1,9 @@
 import {Provider, connect} from 'react-redux';
+import {Store} from 'redux';
 import {List} from 'immutable'
 import * as React from 'react'
-import * as ReactDOM from 'react-dom'
 import {Todo} from 'js/todo/model'
 import {Actions} from 'js/todo/action'
-import todoStore from 'js/todo/todoStore'
 
 const Link = ({active, onClick, children} : {active: boolean, onClick: () => void, children?: React.ReactNode}) => {
   if (active) {
@@ -21,10 +20,12 @@ const Link = ({active, onClick, children} : {active: boolean, onClick: () => voi
 };
 
 /*
+import {ReduxStatelessContainer} from 'js/commons'
+
 class FilterLink extends ReduxStatelessContainer<{filter: string}> {
 
   onFilterClick = () => {
-    this.store.dispatch(Actions.setVisibilityFilter(this.props.filter);
+    this.store.dispatch(Actions.setVisibilityFilter(this.props.filter));
   };
 
   render() {
@@ -161,16 +162,15 @@ const Filters = () => (
   </div>
 );
 
-const TodoApp = () => (
-  <div>
-    <h1>Todo:</h1>
-    <AddTodo />
-    <VisibleTodoList />
-    <Filters />
-  </div>
+const TodoApp = ({store} : {store: Store}) => (
+  <Provider store={store}>
+    <div>
+      <h1>Todo:</h1>
+      <AddTodo />
+      <VisibleTodoList />
+      <Filters />
+    </div>
+  </Provider>
 );
-
-const todoAppRoot = document.getElementById('todo');
-ReactDOM.render(<Provider store={todoStore}><TodoApp /></Provider>, todoAppRoot);
 
 export default TodoApp;
