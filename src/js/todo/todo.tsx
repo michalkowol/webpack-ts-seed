@@ -2,7 +2,8 @@ import {Provider, connect} from 'react-redux';
 import {List} from 'immutable'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import {Todo, AddTodoAction, ToggleTodoAction, FilterAction} from 'js/todo/model'
+import {Todo} from 'js/todo/model'
+import {Actions} from 'js/todo/action'
 import todoStore from 'js/todo/todoStore'
 
 const Link = ({active, onClick, children} : {active: boolean, onClick: () => void, children?: React.ReactNode}) => {
@@ -23,11 +24,7 @@ const Link = ({active, onClick, children} : {active: boolean, onClick: () => voi
 class FilterLink extends ReduxStatelessContainer<{filter: string}> {
 
   onFilterClick = () => {
-    const action: FilterAction = {
-      type: 'SET_VISIBILITY_FILTER',
-      filter: this.props.filter
-    };
-    this.store.dispatch(action);
+    this.store.dispatch(Actions.setVisibilityFilter(this.props.filter);
   };
 
   render() {
@@ -49,11 +46,7 @@ const mapStateToLinkProps = (state, ownProps: {filter: string}) => {
 const mapDispatchToLinkProps = (dispatch: (action: any) => any, ownProps: {filter: string}) => {
   return {
     onClick: () => {
-      const action: FilterAction = {
-        type: 'SET_VISIBILITY_FILTER',
-        filter: ownProps.filter
-      };
-      dispatch(action);
+      dispatch(Actions.setVisibilityFilter(ownProps.filter));
     }
   };
 };
@@ -89,12 +82,7 @@ class AddTodo extends ReduxStatelessContainer<{}> {
 
   onAddButtonClick = (event: React.MouseEvent, input: HTMLInputElement) => {
     event.preventDefault();
-    const action: AddTodoAction = {
-      type: 'ADD_TODO',
-      id: nextTodoId++,
-      text: input.value
-    };
-    this.store.dispatch(action);
+    this.store.dispatch(Actions.addTodo(input.value));
     input.value = ''
   };
 
@@ -106,16 +94,10 @@ class AddTodo extends ReduxStatelessContainer<{}> {
 }
 */
 
-let nextTodoId = 0;
 let AddTodo = ({dispatch} : {dispatch?: (action: any) => any}) => {
   const onAddButtonClick = (event: React.MouseEvent, input: HTMLInputElement) => {
     event.preventDefault();
-    const action: AddTodoAction = {
-      type: 'ADD_TODO',
-      id: nextTodoId++,
-      text: input.value
-    };
-    dispatch(action);
+    dispatch(Actions.addTodo(input.value));
     input.value = ''
   };
 
@@ -143,11 +125,7 @@ const TodoList = ({onTodoClick, todos} : {onTodoClick: (id: number) => void, tod
 class VisibleTodoList extends ReduxStatelessContainer<{}> {
 
   toggleTodo = (id: number) => {
-    const action: ToggleTodoAction = {
-      type: 'TOGGLE_TODO',
-      id
-    };
-    this.store.dispatch(action);
+    this.store.dispatch(Actions.toggleTodo(id));
   };
 
   render() {
@@ -168,11 +146,7 @@ const mapStateToTodoListProps = (state) => {
 const mapDispatchToTodoListProps = (dispatch: (action: any) => any) => {
   return {
     onTodoClick: (id: number) => {
-      const action: ToggleTodoAction = {
-        type: 'TOGGLE_TODO',
-        id
-      };
-      dispatch(action);
+      dispatch(Actions.toggleTodo(id));
     }
   };
 };

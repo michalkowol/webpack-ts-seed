@@ -1,7 +1,8 @@
 import {Reducer, Store, createStore, combineReducers} from 'redux';
 import {Commons} from 'js/commons';
 import {List} from 'immutable'
-import {Todo, AddTodoAction, ToggleTodoAction, FilterAction} from 'js/todo/model'
+import {Todo} from 'js/todo/model'
+import {AddTodoAction, ToggleTodoAction, FilterAction} from 'js/todo/action'
 
 const todo = (state: Todo, action: AddTodoAction | ToggleTodoAction): Todo => {
   switch (action.type) {
