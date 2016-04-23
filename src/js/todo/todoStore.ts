@@ -1,4 +1,4 @@
-import {createStore, combineReducers} from 'redux';
+import {Reducer, Store, createStore, combineReducers} from 'redux';
 import {Commons} from 'js/commons';
 import {List} from 'immutable'
 import {Todo, AddTodoAction, ToggleTodoAction, FilterAction} from 'js/todo/model'
@@ -47,13 +47,13 @@ const rootReducer = combineReducers({
   visibilityFilter
 });
 
-function configureStore(reducer, initialState) {
+function configureStore(reducer: Reducer, initialState?: any): Store {
   const store = createStore(reducer, initialState,
     (window as any).devToolsExtension ? (window as any).devToolsExtension() : undefined
   );
   return store;
 }
 
-const store = configureStore(rootReducer, undefined);
+const store = configureStore(rootReducer);
 
 export default store;

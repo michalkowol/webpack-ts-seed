@@ -1,7 +1,7 @@
-import { createStore } from 'redux'
+import { Store, Reducer, createStore } from 'redux'
 import counter from 'js/counter/counter'
 
-function configureStore(reducer, initialState) {
+function configureStore(reducer: Reducer, initialState?: any): Store {
   const store = createStore(reducer, initialState,
     // (window as any).devToolsExtension ? (window as any).devToolsExtension() : undefined
     undefined
@@ -16,7 +16,7 @@ function configureStore(reducer, initialState) {
 
 // Create a Redux store holding the state of your app.
 // Its API is { subscribe, dispatch, getState }.
-let store = configureStore(counter, undefined);
+let store = configureStore(counter);
 
 function render() {
   document.getElementById('redux').innerHTML = `<h2>Click counter: ${store.getState()}</h2>`;

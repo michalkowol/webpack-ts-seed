@@ -1,6 +1,6 @@
+import {Store} from 'redux';
 import {List} from 'immutable'
 import * as React from 'react'
-import store from 'js/todo/todoStore'
 import {Todo, AddTodoAction, ToggleTodoAction, FilterAction} from 'js/todo/model'
 
 const Link = ({active, onClick, children} : {active: boolean, onClick: () => void, children?: React.ReactNode}) => {
@@ -17,12 +17,12 @@ const Link = ({active, onClick, children} : {active: boolean, onClick: () => voi
   )
 };
 
-class FilterLink extends React.Component<{filter: string, children?: React.ReactNode}, {}> {
+class FilterLink extends React.Component<{store: Store, filter: string, children?: React.ReactNode}, {}> {
 
   unsubscribe: Function;
 
   componentDidMount() {
-    this.unsubscribe = store.subscribe(() =>
+    this.unsubscribe = this.props.store.subscribe(() =>
       this.forceUpdate()
     );
   }
@@ -36,11 +36,11 @@ class FilterLink extends React.Component<{filter: string, children?: React.React
       type: 'SET_VISIBILITY_FILTER',
       filter: this.props.filter
     };
-    store.dispatch(action);
+    this.props.store.dispatch(action);
   };
 
   render() {
-    const currentFilter = store.getState().visibilityFilter;
+    const currentFilter = this.props.store.getState().visibilityFilter;
     const filter = this.props.filter;
     const children = this.props.children;
     return (
@@ -75,7 +75,7 @@ const InputWithButton = ({inputPlaceholder, buttonText, onButtonClick} : {inputP
 };
 
 var nextTodoId = 0;
-class AddTodo extends React.Component<{}, {}> {
+class AddTodo extends React.Component<{store}, {}> {
   onAddButtonClick = (event: React.MouseEvent, input: HTMLInputElement) => {
     event.preventDefault();
     const action: AddTodoAction = {
@@ -83,7 +83,7 @@ class AddTodo extends React.Component<{}, {}> {
       id: nextTodoId++,
       text: input.value
     };
-    store.dispatch(action);
+    this.props.store.dispatch(action);
     input.value = ''
   };
 
@@ -108,12 +108,12 @@ const TodoList = ({onTodoClick, todos} : {onTodoClick: (id: number) => void, tod
   </ul>
 );
 
-class VisibleTodoList extends React.Component<{}, {}> {
+class VisibleTodoList extends React.Component<{store: Store}, {}> {
 
   unsubscribe: Function;
 
   componentDidMount() {
-    this.unsubscribe = store.subscribe(() =>
+    this.unsubscribe = this.props.store.subscribe(() =>
       this.forceUpdate()
     );
   }
@@ -127,11 +127,11 @@ class VisibleTodoList extends React.Component<{}, {}> {
       type: 'TOGGLE_TODO',
       id
     };
-    store.dispatch(action);
+    this.props.store.dispatch(action);
   };
 
   render() {
-    const state = store.getState();
+    const state = this.props.store.getState();
     const visibleTodos = getVisibleTodos(state.todos, state.visibilityFilter);
     return (
       <TodoList onTodoClick={this.toggleTodo} todos={visibleTodos} />
@@ -139,21 +139,21 @@ class VisibleTodoList extends React.Component<{}, {}> {
   }
 }
 
-const Filters = () => (
+const Filters = ({store} : {store: Store}) => (
   <div>
     {'Show: '}
-    <FilterLink filter='SHOW_ALL'>All</FilterLink>{' '}
-    <FilterLink filter='SHOW_ACTIVE'>Active</FilterLink>{' '}
-    <FilterLink filter='SHOW_COMPLETED'>Completed</FilterLink>
+    <FilterLink filter='SHOW_ALL' store={store}>All</FilterLink>{' '}
+    <FilterLink filter='SHOW_ACTIVE' store={store}>Active</FilterLink>{' '}
+    <FilterLink filter='SHOW_COMPLETED' store={store}>Completed</FilterLink>
   </div>
 );
 
-const TodoApp = () => (
+const TodoApp = ({store} : {store: Store}) => (
   <div>
     <h1>Todo:</h1>
-    <AddTodo />
-    <VisibleTodoList />
-    <Filters />
+    <AddTodo store={store} />
+    <VisibleTodoList store={store} />
+    <Filters store={store} />
   </div>
 );
 

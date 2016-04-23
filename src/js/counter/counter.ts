@@ -10,7 +10,7 @@
  * follows a different convention (such as function maps) if it makes sense for your
  * project.
  */
-export default function counter(state = 0, action) {
+export default function counter(state = 0, action): number {
   switch (action.type) {
     case 'INCREMENT':
       return state + 1;

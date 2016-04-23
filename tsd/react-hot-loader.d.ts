@@ -9,6 +9,7 @@ declare module 'react-hot-loader' {
   
   interface AppContainer extends React.Props<AppContainer> {
     component: Component
+    props?: any
   }
   interface AppContainer extends React.ComponentClass<AppContainer> {}
   const AppContainer: AppContainer
