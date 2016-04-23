@@ -1,4 +1,4 @@
-import {Provider} from 'react-redux';
+import {Provider, connect} from 'react-redux';
 import {List} from 'immutable'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
@@ -101,6 +101,7 @@ const TodoList = ({onTodoClick, todos} : {onTodoClick: (id: number) => void, tod
   </ul>
 );
 
+/*
 class VisibleTodoList extends ReduxStatelessContainer<{}> {
 
   toggleTodo = (id: number) => {
@@ -115,10 +116,29 @@ class VisibleTodoList extends ReduxStatelessContainer<{}> {
     const state = this.store.getState();
     const visibleTodos = getVisibleTodos(state.todos, state.visibilityFilter);
     return (
-      <TodoList onTodoClick={this.toggleTodo} todos={visibleTodos} />
+      <TodoList onTodoClick={this.toggleTodo} todos={visibleTodos}/>
     );
   }
 }
+*/
+
+const mapStateToProps = (state: any): any => {
+  return {
+    todos: getVisibleTodos(state.todos, state.visibilityFilter)
+  };
+};
+const mapDispatchToProps = (dispatch: (any) => any): any => {
+  return {
+    onTodoClick: (id: number) => {
+      const action: ToggleTodoAction = {
+        type: 'TOGGLE_TODO',
+        id
+      };
+      dispatch(action);
+    }
+  };
+};
+const VisibleTodoList = connect(mapStateToProps, mapDispatchToProps)(TodoList);
 
 const Filters = () => (
   <div>
