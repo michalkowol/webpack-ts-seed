@@ -21,7 +21,7 @@ const todo = (state: Todo, action: AddTodoAction | ToggleTodoAction): Todo => {
   }
 };
 
-const todos = (state = Commons.emptyList<Todo>(), action: AddTodoAction | ToggleTodoAction): List<Todo> => {
+const todos = (state = List.of<Todo>(), action: AddTodoAction | ToggleTodoAction): List<Todo> => {
   switch (action.type) {
     case 'ADD_TODO':
       const newTodo = todo(undefined, action);
