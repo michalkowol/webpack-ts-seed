@@ -4,7 +4,6 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import {Todo, AddTodoAction, ToggleTodoAction, FilterAction} from 'js/todo/model'
 import todoStore from 'js/todo/todoStore'
-import {ReduxStatelessContainer} from 'js/commons';
 
 const Link = ({active, onClick, children} : {active: boolean, onClick: () => void, children?: React.ReactNode}) => {
   if (active) {
@@ -20,6 +19,7 @@ const Link = ({active, onClick, children} : {active: boolean, onClick: () => voi
   )
 };
 
+/*
 class FilterLink extends ReduxStatelessContainer<{filter: string}> {
 
   onFilterClick = () => {
@@ -39,6 +39,25 @@ class FilterLink extends ReduxStatelessContainer<{filter: string}> {
     );
   }
 }
+*/
+
+const mapStateToLinkProps = (state, ownProps: {filter: string}) => {
+  return {
+    active: ownProps.filter === state.visibilityFilter
+  }
+};
+const mapDispatchToLinkProps = (dispatch: (action: any) => any, ownProps: {filter: string}) => {
+  return {
+    onClick: () => {
+      const action: FilterAction = {
+        type: 'SET_VISIBILITY_FILTER',
+        filter: ownProps.filter
+      };
+      dispatch(action);
+    }
+  };
+};
+const FilterLink = connect(mapStateToLinkProps, mapDispatchToLinkProps)(Link);
 
 const getVisibleTodos = (todos: List<Todo>, filter: string): List<Todo> => {
   switch (filter) {
@@ -65,8 +84,6 @@ const InputWithButton = ({inputPlaceholder, buttonText, onButtonClick} : {inputP
   );
 };
 
-var nextTodoId = 0;
-
 /*
 class AddTodo extends ReduxStatelessContainer<{}> {
 
@@ -89,6 +106,7 @@ class AddTodo extends ReduxStatelessContainer<{}> {
 }
 */
 
+let nextTodoId = 0;
 let AddTodo = ({dispatch} : {dispatch?: (action: any) => any}) => {
   const onAddButtonClick = (event: React.MouseEvent, input: HTMLInputElement) => {
     event.preventDefault();
@@ -142,12 +160,12 @@ class VisibleTodoList extends ReduxStatelessContainer<{}> {
 }
 */
 
-const mapStateToTodoListProps = (state: any): any => {
+const mapStateToTodoListProps = (state) => {
   return {
     todos: getVisibleTodos(state.todos, state.visibilityFilter)
   };
 };
-const mapDispatchToTodoListProps = (dispatch: (action: any) => any): any => {
+const mapDispatchToTodoListProps = (dispatch: (action: any) => any) => {
   return {
     onTodoClick: (id: number) => {
       const action: ToggleTodoAction = {
