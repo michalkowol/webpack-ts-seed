@@ -1,7 +1,9 @@
 import {Store} from 'redux';
 import {List} from 'immutable'
 import * as React from 'react'
+import * as ReactDOM from 'react-dom'
 import {Todo, AddTodoAction, ToggleTodoAction, FilterAction} from 'js/todo/model'
+import todoStore from 'js/todo/todoStore'
 
 const Link = ({active, onClick, children} : {active: boolean, onClick: () => void, children?: React.ReactNode}) => {
   if (active) {
@@ -17,12 +19,18 @@ const Link = ({active, onClick, children} : {active: boolean, onClick: () => voi
   )
 };
 
-class FilterLink extends React.Component<{store: Store, filter: string, children?: React.ReactNode}, {}> {
+class FilterLink extends React.Component<{filter: string}, {}> {
+
+  static contextTypes = {
+    store: React.PropTypes.object.isRequired
+  };
+
+  store = (this.context as any).store as Store;
 
   unsubscribe: Function;
 
   componentDidMount() {
-    this.unsubscribe = this.props.store.subscribe(() =>
+    this.unsubscribe = this.store.subscribe(() =>
       this.forceUpdate()
     );
   }
@@ -36,11 +44,11 @@ class FilterLink extends React.Component<{store: Store, filter: string, children
       type: 'SET_VISIBILITY_FILTER',
       filter: this.props.filter
     };
-    this.props.store.dispatch(action);
+    this.store.dispatch(action);
   };
 
   render() {
-    const currentFilter = this.props.store.getState().visibilityFilter;
+    const currentFilter = this.store.getState().visibilityFilter;
     const filter = this.props.filter;
     const children = this.props.children;
     return (
@@ -75,7 +83,14 @@ const InputWithButton = ({inputPlaceholder, buttonText, onButtonClick} : {inputP
 };
 
 var nextTodoId = 0;
-class AddTodo extends React.Component<{store}, {}> {
+class AddTodo extends React.Component<{}, {}> {
+
+  static contextTypes = {
+    store: React.PropTypes.object.isRequired
+  };
+
+  store = (this.context as any).store as Store;
+
   onAddButtonClick = (event: React.MouseEvent, input: HTMLInputElement) => {
     event.preventDefault();
     const action: AddTodoAction = {
@@ -83,7 +98,7 @@ class AddTodo extends React.Component<{store}, {}> {
       id: nextTodoId++,
       text: input.value
     };
-    this.props.store.dispatch(action);
+    this.store.dispatch(action);
     input.value = ''
   };
 
@@ -108,12 +123,18 @@ const TodoList = ({onTodoClick, todos} : {onTodoClick: (id: number) => void, tod
   </ul>
 );
 
-class VisibleTodoList extends React.Component<{store: Store}, {}> {
+class VisibleTodoList extends React.Component<{}, {}> {
+
+  static contextTypes = {
+    store: React.PropTypes.object.isRequired
+  };
+
+  store = (this.context as any).store as Store;
 
   unsubscribe: Function;
 
   componentDidMount() {
-    this.unsubscribe = this.props.store.subscribe(() =>
+    this.unsubscribe = this.store.subscribe(() =>
       this.forceUpdate()
     );
   }
@@ -127,11 +148,11 @@ class VisibleTodoList extends React.Component<{store: Store}, {}> {
       type: 'TOGGLE_TODO',
       id
     };
-    this.props.store.dispatch(action);
+    this.store.dispatch(action);
   };
 
   render() {
-    const state = this.props.store.getState();
+    const state = this.store.getState();
     const visibleTodos = getVisibleTodos(state.todos, state.visibilityFilter);
     return (
       <TodoList onTodoClick={this.toggleTodo} todos={visibleTodos} />
@@ -139,22 +160,42 @@ class VisibleTodoList extends React.Component<{store: Store}, {}> {
   }
 }
 
-const Filters = ({store} : {store: Store}) => (
+const Filters = () => (
   <div>
     {'Show: '}
-    <FilterLink filter='SHOW_ALL' store={store}>All</FilterLink>{' '}
-    <FilterLink filter='SHOW_ACTIVE' store={store}>Active</FilterLink>{' '}
-    <FilterLink filter='SHOW_COMPLETED' store={store}>Completed</FilterLink>
+    <FilterLink filter='SHOW_ALL'>All</FilterLink>{' '}
+    <FilterLink filter='SHOW_ACTIVE'>Active</FilterLink>{' '}
+    <FilterLink filter='SHOW_COMPLETED'>Completed</FilterLink>
   </div>
 );
 
-const TodoApp = ({store} : {store: Store}) => (
+class TodoStoreProvider extends React.Component<{store: Store}, {}> {
+
+  static childContextTypes = {
+    store: React.PropTypes.object.isRequired
+  };
+
+  getChildContext() {
+    return {
+      store: this.props.store
+    }
+  }
+
+  render() {
+    return <div>{this.props.children}</div>;
+  }
+}
+
+const TodoApp = () => (
   <div>
     <h1>Todo:</h1>
-    <AddTodo store={store} />
-    <VisibleTodoList store={store} />
-    <Filters store={store} />
+    <AddTodo />
+    <VisibleTodoList />
+    <Filters />
   </div>
 );
+
+const todoAppRoot = document.getElementById('todo');
+ReactDOM.render(<TodoStoreProvider store={todoStore}><TodoApp /></TodoStoreProvider>, todoAppRoot);
 
 export default TodoApp;
