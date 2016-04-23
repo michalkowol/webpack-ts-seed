@@ -1,4 +1,5 @@
 import {Store} from 'redux';
+import {Provider} from 'react-redux';
 import {List} from 'immutable'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
@@ -169,23 +170,6 @@ const Filters = () => (
   </div>
 );
 
-class TodoStoreProvider extends React.Component<{store: Store}, {}> {
-
-  static childContextTypes = {
-    store: React.PropTypes.object.isRequired
-  };
-
-  getChildContext() {
-    return {
-      store: this.props.store
-    }
-  }
-
-  render() {
-    return <div>{this.props.children}</div>;
-  }
-}
-
 const TodoApp = () => (
   <div>
     <h1>Todo:</h1>
@@ -196,6 +180,6 @@ const TodoApp = () => (
 );
 
 const todoAppRoot = document.getElementById('todo');
-ReactDOM.render(<TodoStoreProvider store={todoStore}><TodoApp /></TodoStoreProvider>, todoAppRoot);
+ReactDOM.render(<Provider store={todoStore}><TodoApp /></Provider>, todoAppRoot);
 
 export default TodoApp;
