@@ -1,10 +1,10 @@
-import {Store} from 'redux';
 import {Provider} from 'react-redux';
 import {List} from 'immutable'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import {Todo, AddTodoAction, ToggleTodoAction, FilterAction} from 'js/todo/model'
 import todoStore from 'js/todo/todoStore'
+import {ReduxStatelessContainer} from 'js/commons';
 
 const Link = ({active, onClick, children} : {active: boolean, onClick: () => void, children?: React.ReactNode}) => {
   if (active) {
@@ -20,25 +20,7 @@ const Link = ({active, onClick, children} : {active: boolean, onClick: () => voi
   )
 };
 
-class FilterLink extends React.Component<{filter: string}, {}> {
-
-  static contextTypes = {
-    store: React.PropTypes.object.isRequired
-  };
-
-  store = (this.context as any).store as Store;
-
-  unsubscribe: Function;
-
-  componentDidMount() {
-    this.unsubscribe = this.store.subscribe(() =>
-      this.forceUpdate()
-    );
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
+class FilterLink extends ReduxStatelessContainer<{filter: string}> {
 
   onFilterClick = () => {
     const action: FilterAction = {
@@ -84,13 +66,8 @@ const InputWithButton = ({inputPlaceholder, buttonText, onButtonClick} : {inputP
 };
 
 var nextTodoId = 0;
-class AddTodo extends React.Component<{}, {}> {
 
-  static contextTypes = {
-    store: React.PropTypes.object.isRequired
-  };
-
-  store = (this.context as any).store as Store;
+class AddTodo extends ReduxStatelessContainer<{}> {
 
   onAddButtonClick = (event: React.MouseEvent, input: HTMLInputElement) => {
     event.preventDefault();
@@ -124,25 +101,7 @@ const TodoList = ({onTodoClick, todos} : {onTodoClick: (id: number) => void, tod
   </ul>
 );
 
-class VisibleTodoList extends React.Component<{}, {}> {
-
-  static contextTypes = {
-    store: React.PropTypes.object.isRequired
-  };
-
-  store = (this.context as any).store as Store;
-
-  unsubscribe: Function;
-
-  componentDidMount() {
-    this.unsubscribe = this.store.subscribe(() =>
-      this.forceUpdate()
-    );
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
+class VisibleTodoList extends ReduxStatelessContainer<{}> {
 
   toggleTodo = (id: number) => {
     const action: ToggleTodoAction = {
