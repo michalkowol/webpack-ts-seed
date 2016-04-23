@@ -67,6 +67,7 @@ const InputWithButton = ({inputPlaceholder, buttonText, onButtonClick} : {inputP
 
 var nextTodoId = 0;
 
+/*
 class AddTodo extends ReduxStatelessContainer<{}> {
 
   onAddButtonClick = (event: React.MouseEvent, input: HTMLInputElement) => {
@@ -86,6 +87,25 @@ class AddTodo extends ReduxStatelessContainer<{}> {
     );
   }
 }
+*/
+
+let AddTodo = ({dispatch} : {dispatch?: (action: any) => any}) => {
+  const onAddButtonClick = (event: React.MouseEvent, input: HTMLInputElement) => {
+    event.preventDefault();
+    const action: AddTodoAction = {
+      type: 'ADD_TODO',
+      id: nextTodoId++,
+      text: input.value
+    };
+    dispatch(action);
+    input.value = ''
+  };
+
+  return (
+    <InputWithButton inputPlaceholder='Todo...' buttonText='Add' onButtonClick={onAddButtonClick} />
+  );
+};
+AddTodo = connect()(AddTodo);
 
 const TodoElement = ({onClick, completed, children} : {onClick: () => void, completed: boolean, children?: React.ReactNode}) => (
   <li style={{textDecoration: completed ? 'line-through' : 'none'}} onClick={onClick}>
@@ -122,12 +142,12 @@ class VisibleTodoList extends ReduxStatelessContainer<{}> {
 }
 */
 
-const mapStateToProps = (state: any): any => {
+const mapStateToTodoListProps = (state: any): any => {
   return {
     todos: getVisibleTodos(state.todos, state.visibilityFilter)
   };
 };
-const mapDispatchToProps = (dispatch: (any) => any): any => {
+const mapDispatchToTodoListProps = (dispatch: (action: any) => any): any => {
   return {
     onTodoClick: (id: number) => {
       const action: ToggleTodoAction = {
@@ -138,7 +158,7 @@ const mapDispatchToProps = (dispatch: (any) => any): any => {
     }
   };
 };
-const VisibleTodoList = connect(mapStateToProps, mapDispatchToProps)(TodoList);
+const VisibleTodoList = connect(mapStateToTodoListProps, mapDispatchToTodoListProps)(TodoList);
 
 const Filters = () => (
   <div>
