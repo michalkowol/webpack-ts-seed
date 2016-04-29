@@ -1,3 +1,12 @@
 body {
   background-color: white;
 }
+
+.active {
+  color: red;
+}
+
+a:focus {
+  color: red;
+  text-decoration: none;
+}

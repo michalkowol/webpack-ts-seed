@@ -4,6 +4,7 @@ import * as ReactDOM from 'react-dom'
 import App from 'js/component/App'
 import todoStore from 'js/todo/todoStore'
 import TodoApp from 'js/todo/todo'
+import AppWithRouter from 'js/router/AppWithRouter'
 
 require('file?name=[name].[ext]!index.html');
 require('file?name=[name].[ext]!bootstrap/dist/css/bootstrap.min.css');
@@ -16,6 +17,10 @@ ReactDOM.render(<AppContainer component={App} />, rootEl);
 
 const todoAppRoot = document.getElementById('todo');
 ReactDOM.render(<AppContainer component={TodoApp} props={{store: todoStore}} />, todoAppRoot);
+
+const appWithRouterRootEl = document.getElementById('app-with-router');
+ReactDOM.render(<AppWithRouter />, appWithRouterRootEl);
+
 
 if (module.hot) {
   module.hot.accept('js/component/App', () => {
