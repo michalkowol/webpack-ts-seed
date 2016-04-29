@@ -1,10 +1,11 @@
 import * as React from 'react'
-import {Router, Route, browserHistory, Link, IndexRoute} from 'react-router'
+import {Router, Route, Link, IndexRoute} from 'react-router'
 import {Commons} from 'js/commons';
-import {createStore, combineReducers, applyMiddleware} from 'redux'
+import {Store, Dispatch} from 'redux'
 import {Provider} from 'react-redux'
-import {syncHistoryWithStore, routerReducer, routerMiddleware, push} from 'react-router-redux'
-import {connect} from "react-redux";
+import {push} from 'react-router-redux'
+import {connect} from 'react-redux'
+import {history} from 'js/router/AppWithRouterStore'
 
 class Home extends React.Component<{}, {}> {
   render() {
@@ -12,7 +13,7 @@ class Home extends React.Component<{}, {}> {
   }
 }
 
-let App = ({dispatch, children} : {dispatch: (action: any) => any, children?: React.ReactNode}) => {
+let App = ({dispatch, children} : {dispatch: Dispatch, children?: React.ReactNode[]}) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -45,7 +46,7 @@ App = connect()(App);
 
 const About = () => <div>About</div>;
 
-const Repos = ({children} : {children?: React.ReactNode}) => (
+const Repos = ({children} : {children?: React.ReactNode[]}) => (
   <div>
     <h2>Repos</h2>
     <ul>
@@ -62,24 +63,6 @@ const Repo = ({params}: {params: {userName: string, repoName: string}}) => (
   </div>
 );
 
-const noOpReducer = (state = 0, action: any): number => {
-  return state;
-};
-
-const middleware = routerMiddleware(browserHistory);
-const store = createStore(
-  combineReducers({
-    noOpReducer,
-    routing: routerReducer
-  }),
-  applyMiddleware(middleware)
-);
-const history = syncHistoryWithStore(browserHistory, store);
-history.listen(location => {
-  console.log(location.pathname);
-  // console.trace(location);
-});
-
 class NavLink extends React.Component<ReactRouter.LinkProps, {}> {
   render() {
     const props = Commons.assign({to: '/', activeClassName: 'active'}, this.props);
@@ -87,7 +70,7 @@ class NavLink extends React.Component<ReactRouter.LinkProps, {}> {
   }
 }
 
-const AppWithRouter = () => {
+const AppWithRouter = ({store} : {store: Store}) => {
   return (
     <Provider store={store}>
       <Router history={history}>

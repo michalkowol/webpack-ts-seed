@@ -5,6 +5,7 @@ import App from 'js/component/App'
 import todoStore from 'js/todo/todoStore'
 import TodoApp from 'js/todo/todo'
 import AppWithRouter from 'js/router/AppWithRouter'
+import {appWithRouterStore} from 'js/router/AppWithRouterStore'
 
 require('file?name=[name].[ext]!index.html');
 require('file?name=[name].[ext]!bootstrap/dist/css/bootstrap.min.css');
@@ -19,7 +20,7 @@ const todoAppRoot = document.getElementById('todo');
 ReactDOM.render(<AppContainer component={TodoApp} props={{store: todoStore}} />, todoAppRoot);
 
 const appWithRouterRootEl = document.getElementById('app-with-router');
-ReactDOM.render(<AppWithRouter />, appWithRouterRootEl);
+ReactDOM.render(<AppContainer component={AppWithRouter} props={{store: appWithRouterStore}} />, appWithRouterRootEl);
 
 
 if (module.hot) {
@@ -28,5 +29,8 @@ if (module.hot) {
   });
   module.hot.accept('js/todo/todo', () => {
     ReactDOM.render(<AppContainer component={require('js/todo/todo').default} props={{store: todoStore}} />, todoAppRoot);
+  });
+  module.hot.accept('js/router/AppWithRouter', () => {
+    ReactDOM.render(<AppContainer component={require('js/router/AppWithRouter').default} props={{store: appWithRouterStore}} />, appWithRouterRootEl);
   });
 }

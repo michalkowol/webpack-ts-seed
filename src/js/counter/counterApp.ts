@@ -14,7 +14,7 @@ function configureStore(reducer: Reducer, initialState?: any): Store {
   return store;
 }
 
-// Create a Redux store holding the state of your app.
+// Create a Redux appWithRouterStore holding the state of your app.
 // Its API is { subscribe, dispatch, getState }.
 let store = configureStore(counter);
 

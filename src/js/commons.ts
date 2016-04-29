@@ -17,7 +17,7 @@ export class ReduxContainer<P, S> extends React.Component<P, S> {
     store: React.PropTypes.object.isRequired
   };
 
-  store = (this.context as any).store as Store;
+  store = (this.context as any).appWithRouterStore as Store;
 
   private unsubscribe: Function;
 

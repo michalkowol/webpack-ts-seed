@@ -23,7 +23,7 @@ module.exports = {
     extensions: ['', '.webpack.js', '.web.js', '.ts', '.tsx', '.js']
   },
   plugins: prod ? [
-    new webpack.DefinePlugin({ "process.env": { NODE_ENV: JSON.stringify("production") } }),
+    new webpack.DefinePlugin({ 'process.env': { NODE_ENV: JSON.stringify('production') } }),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin()

@@ -1,5 +1,5 @@
 import {Provider, connect} from 'react-redux';
-import {Store} from 'redux';
+import {Store, Dispatch} from 'redux';
 import {List} from 'immutable'
 import * as React from 'react'
 import {Todo} from 'js/todo/model'
@@ -25,11 +25,11 @@ import {ReduxStatelessContainer} from 'js/commons'
 class FilterLink extends ReduxStatelessContainer<{filter: string}> {
 
   onFilterClick = () => {
-    this.store.dispatch(Actions.setVisibilityFilter(this.props.filter));
+    this.appWithRouterStore.dispatch(Actions.setVisibilityFilter(this.props.filter));
   };
 
   render() {
-    const currentFilter = this.store.getState().visibilityFilter;
+    const currentFilter = this.appWithRouterStore.getState().visibilityFilter;
     const filter = this.props.filter;
     const children = this.props.children;
     return (
@@ -44,7 +44,7 @@ const mapStateToLinkProps = (state, ownProps: {filter: string}) => {
     active: ownProps.filter === state.visibilityFilter
   }
 };
-const mapDispatchToLinkProps = (dispatch: (action: any) => any, ownProps: {filter: string}) => {
+const mapDispatchToLinkProps = (dispatch: Dispatch, ownProps: {filter: string}) => {
   return {
     onClick: () => {
       dispatch(Actions.setVisibilityFilter(ownProps.filter));
@@ -83,7 +83,7 @@ class AddTodo extends ReduxStatelessContainer<{}> {
 
   onAddButtonClick = (event: React.MouseEvent, input: HTMLInputElement) => {
     event.preventDefault();
-    this.store.dispatch(Actions.addTodo(input.value));
+    this.appWithRouterStore.dispatch(Actions.addTodo(input.value));
     input.value = ''
   };
 
@@ -95,7 +95,7 @@ class AddTodo extends ReduxStatelessContainer<{}> {
 }
 */
 
-let AddTodo = ({dispatch} : {dispatch?: (action: any) => any}) => {
+let AddTodo = ({dispatch} : {dispatch?: Dispatch}) => {
   const onAddButtonClick = (event: React.MouseEvent, input: HTMLInputElement) => {
     event.preventDefault();
     dispatch(Actions.addTodo(input.value));
@@ -126,11 +126,11 @@ const TodoList = ({onTodoClick, todos} : {onTodoClick: (id: number) => void, tod
 class VisibleTodoList extends ReduxStatelessContainer<{}> {
 
   toggleTodo = (id: number) => {
-    this.store.dispatch(Actions.toggleTodo(id));
+    this.appWithRouterStore.dispatch(Actions.toggleTodo(id));
   };
 
   render() {
-    const state = this.store.getState();
+    const state = this.appWithRouterStore.getState();
     const visibleTodos = getVisibleTodos(state.todos, state.visibilityFilter);
     return (
       <TodoList onTodoClick={this.toggleTodo} todos={visibleTodos}/>
