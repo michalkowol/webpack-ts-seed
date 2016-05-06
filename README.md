@@ -22,6 +22,7 @@ npm run build
 * [React](https://facebook.github.io/react/)
 * [Redux](http://redux.js.org/index.html)
 * [Redux & React](http://redux.js.org/docs/basics/UsageWithReact.html)
+* [Presentational and Container Components](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0)
 * [React and Redux with TypeScript](http://jaysoo.ca/2015/09/26/typed-react-and-redux/)
 * [Getting Started with Redux (Videos)](https://egghead.io/series/getting-started-with-redux)
 * [Webpack Compared](http://survivejs.com/webpack_react/webpack_compared/)
