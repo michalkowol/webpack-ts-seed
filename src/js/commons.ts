@@ -1,4 +1,3 @@
-import {Store} from 'redux';
 import * as React from 'react'
 
 export module Commons {
@@ -10,28 +9,4 @@ export module Commons {
     }
     return target;
   }
-}
-
-export class ReduxContainer<P, S> extends React.Component<P, S> {
-  static contextTypes = {
-    store: React.PropTypes.object.isRequired
-  };
-
-  store = (this.context as any).appWithRouterStore as Store;
-
-  private unsubscribe: Function;
-
-  componentDidMount() {
-    this.unsubscribe = this.store.subscribe(() =>
-      this.forceUpdate()
-    );
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-}
-
-export class ReduxStatelessContainer<P> extends ReduxContainer<P, {}> {
-
 }

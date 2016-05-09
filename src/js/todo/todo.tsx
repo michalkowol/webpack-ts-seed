@@ -19,26 +19,6 @@ const Link = ({active, onClick, children} : {active: boolean, onClick: () => voi
   )
 };
 
-/*
-import {ReduxStatelessContainer} from 'js/commons'
-
-class FilterLink extends ReduxStatelessContainer<{filter: string}> {
-
-  onFilterClick = () => {
-    this.appWithRouterStore.dispatch(Actions.setVisibilityFilter(this.props.filter));
-  };
-
-  render() {
-    const currentFilter = this.appWithRouterStore.getState().visibilityFilter;
-    const filter = this.props.filter;
-    const children = this.props.children;
-    return (
-      <Link active={filter === currentFilter} onClick={this.onFilterClick}>{children}</Link>
-    );
-  }
-}
-*/
-
 const mapStateToLinkProps = (state, ownProps: {filter: string}) => {
   return {
     active: ownProps.filter === state.visibilityFilter
@@ -78,23 +58,6 @@ const InputWithButton = ({inputPlaceholder, buttonText, onButtonClick} : {inputP
   );
 };
 
-/*
-class AddTodo extends ReduxStatelessContainer<{}> {
-
-  onAddButtonClick = (event: React.MouseEvent, input: HTMLInputElement) => {
-    event.preventDefault();
-    this.appWithRouterStore.dispatch(Actions.addTodo(input.value));
-    input.value = ''
-  };
-
-  render() {
-    return (
-      <InputWithButton inputPlaceholder='Todo...' buttonText='Add' onButtonClick={this.onAddButtonClick} />
-    );
-  }
-}
-*/
-
 let AddTodo = ({dispatch} : {dispatch?: Dispatch}) => {
   const onAddButtonClick = (event: React.MouseEvent, input: HTMLInputElement) => {
     event.preventDefault();
@@ -121,23 +84,6 @@ const TodoList = ({onTodoClick, todos} : {onTodoClick: (id: number) => void, tod
     ))}
   </ul>
 );
-
-/*
-class VisibleTodoList extends ReduxStatelessContainer<{}> {
-
-  toggleTodo = (id: number) => {
-    this.appWithRouterStore.dispatch(Actions.toggleTodo(id));
-  };
-
-  render() {
-    const state = this.appWithRouterStore.getState();
-    const visibleTodos = getVisibleTodos(state.todos, state.visibilityFilter);
-    return (
-      <TodoList onTodoClick={this.toggleTodo} todos={visibleTodos}/>
-    );
-  }
-}
-*/
 
 const mapStateToTodoListProps = (state) => {
   return {
