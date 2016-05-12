@@ -4,7 +4,6 @@ import * as ReactDOM from 'react-dom'
 import Root from 'js/router/Root'
 import {store, history} from 'js/store/store'
 
-
 require('file?name=[name].[ext]!index.html');
 require('file?name=[name].[ext]!bootstrap/dist/css/bootstrap.min.css');
 require('css/main.scss');

@@ -7,7 +7,7 @@ import RepoReducer from 'js/reducer/RepoReducer'
 const middleware: Middleware = routerMiddleware(browserHistory);
 const devToolsExtension = (() => {
   const devTools: Function = (window as any).devToolsExtension;
-  return devTools ? devTools() : undefined;
+  return devTools ? devTools() : f => f;
 })();
 
 const reducers = combineReducers({
